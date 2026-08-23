@@ -1,0 +1,25 @@
+{
+  "name": "via54-plugin-monorepo",
+  "private": true,
+  "description": "via54 系列项目多插件单体仓库",
+  "workspaces": [
+    "via54lab_report",
+    "via54lab_crawler",
+    "via54lab_medit",
+    "via54lab_medfeed",
+    "via54lab_design",
+    "via54lab_algo",
+    "via54lab_larkgroups"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present"
+  },
+  "keywords": [
+    "deepseek",
+    "cordis",
+    "mcp",
+    "monorepo"
+  ],
+  "author": "via54",
+  "license": "AGPL-3.0-or-later"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@via54/plugin-report",
+  "version": "1.0.0",
+  "description": "via54Plugin 销售报表自动填写与深度校对独立子插件",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "cordis": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

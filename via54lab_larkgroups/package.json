@@ -1,0 +1,17 @@
+{
+  "name": "@via54/plugin-larkgroups",
+  "version": "1.0.0",
+  "description": "via54Plugin 飞书群组自动化协作与学术分发独立子插件",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "cordis": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

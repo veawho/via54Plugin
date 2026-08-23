@@ -1,0 +1,8 @@
+# via54lab_medfeed 默认自包含代理池配置
+proxy:
+  enabled: false
+  validate_url: "https://ip.sb"
+  pool_size: 5
+  providers:
+    - name: static
+      weight: 1.0

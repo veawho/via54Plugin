@@ -1,0 +1,8 @@
+# via54lab_design 默认高保真渲染预设配置
+design:
+  theme: cinematic-epic
+  aspect_ratio: "16:9"
+  export_format: pdf
+  assets:
+    default_font: "Microsoft YaHei"
+    logo_path: "./data/logo.png"

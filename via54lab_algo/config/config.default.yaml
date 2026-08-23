@@ -1,0 +1,15 @@
+# via54lab_algo 元调度与自我进化算法配置
+meta_scheduler:
+  version: 1.0.0
+  hardware_limits:
+    max_cpu_percent: 85
+    max_ram_usage_gb: 16
+    allow_local_gpu: true
+  model_weights:
+    deepseek-chat: 0.9
+    local_ollama: 0.6
+    gpt-4o: 0.8
+  growth:
+    auto_save_interval_sec: 300
+    learning_rate: 0.1
+    db_path: "./data/growth.db"

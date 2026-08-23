@@ -1,0 +1,16 @@
+{
+  "name": "@via54/plugin-core",
+  "version": "1.0.0",
+  "description": "via54Plugin 核心管理工具与 MCP 服务器",
+  "main": "dist/mcp.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+# via54Medit 默认自包含配置文件
+medit:
+  version: 4.5.0
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key: ${DEEPSEEK_API_KEY}
+  router:
+    sources: pubmed,openalex,s2
+    fallback_to_local: true
+  storage:
+    local_db_path: ./data/medit.db
