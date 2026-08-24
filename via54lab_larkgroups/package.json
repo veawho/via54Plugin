@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.6.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "cordis": "^3.0.0"
   },
   "devDependencies": {
