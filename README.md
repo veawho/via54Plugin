@@ -118,7 +118,12 @@ plugins:
     proxy: "http://localhost:1080"
 ```
 
+### 3. 本地集成与测试验证状态
+- **核心包构建**：`via54lab_core` 模块已被添加至根 workspace，运行 `npm run build` 成功输出 `mcp.js` 单体打包产物。
+- **Harness 挂载测试**：已成功在本地部署的 `DeepSeek_harness` (`cordis.patch.yml`) 中注册挂载，并通过 JSON-RPC 协议进行 `tools/list` 探活，成功发现全部 16 个跨仓库集成工具，响应及交互表现完美。
+
 ---
 
 ## 📄 开源许可
 本仓库遵循 **AGPL-3.0-or-later** 许可协议。
+

@@ -9,7 +9,8 @@
     "via54lab_medfeed",
     "via54lab_design",
     "via54lab_algo",
-    "via54lab_larkgroups"
+    "via54lab_larkgroups",
+    "via54lab_core"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present"
