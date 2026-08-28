@@ -12,7 +12,7 @@
     "start:cli": "node dist/cli/index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.6.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
     "cordis": "^3.0.0"
