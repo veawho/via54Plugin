@@ -10,7 +10,8 @@
     "via54lab_design",
     "via54lab_algo",
     "via54lab_larkgroups",
-    "via54lab_core"
+    "via54lab_core",
+    "via54lab_wechat"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present"

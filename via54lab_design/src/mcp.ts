@@ -12,7 +12,6 @@ import fs from 'fs';
 const execAsync = promisify(exec);
 const currentDir = __dirname;
 
-// 自动就地寻找 mmx 执行二进制
 const getBinaryPath = () => {
   const isWin = process.platform === 'win32';
   const binName = isWin ? 'mmx.exe' : 'mmx';
@@ -20,9 +19,15 @@ const getBinaryPath = () => {
   if (fs.existsSync(pkgBinPath)) {
     return `"${pkgBinPath}"`;
   }
-  // 降级使用原来的外部绝对路径
-  const fallbackPath = isWin ? 'C:\\Users\\via54\\Desktop\\developments\\via54Design\\bin\\mmx.exe' : 'mmx';
-  return `"${fallbackPath}"`;
+  // 动态解析外部绝对路径（支持 G:\agent\ai\projects 和 C:\Users\via54\Desktop\developments）
+  const projectsDir = process.env.VIA54_PROJECTS_DIR || path.resolve(currentDir, '..', '..', '..');
+  const fallbackPath = path.join(projectsDir, 'via54Design', 'bin', binName);
+  if (fs.existsSync(fallbackPath)) {
+    return `"${fallbackPath}"`;
+  }
+  // 降级使用硬编码的备用路径
+  const hardcodedFallback = isWin ? 'C:\\Users\\via54\\Desktop\\developments\\via54Design\\bin\\mmx.exe' : 'mmx';
+  return `"${hardcodedFallback}"`;
 };
 const mmxBin = getBinaryPath();
 

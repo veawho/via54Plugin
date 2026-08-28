@@ -15,9 +15,27 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import path from 'path';
+import fs from 'fs';
 
 const execAsync = promisify(exec);
 const pythonPath = process.env.PYTHON || 'python';
+
+const getProjectsDir = () => {
+  if (process.env.VIA54_PROJECTS_DIR) {
+    return process.env.VIA54_PROJECTS_DIR;
+  }
+  const resolved = path.resolve(__dirname, '..', '..', '..');
+  if (fs.existsSync(path.join(resolved, 'via54Crawler'))) {
+    return resolved;
+  }
+  const fallback = 'C:\\Users\\via54\\Desktop\\developments';
+  if (fs.existsSync(path.join(fallback, 'via54Crawler'))) {
+    return fallback;
+  }
+  return resolved;
+};
+const projectsDir = getProjectsDir();
 
 const server = new Server(
   {
@@ -203,6 +221,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['project'],
         },
       },
+      {
+        name: 'parse_wechat_article',
+        description: '解析微信公众号文章，提取标题、作者、公众号、发布时间及 Markdown 格式正文',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            url: { type: 'string', description: '微信公众号文章 URL' },
+          },
+          required: ['url'],
+        },
+      },
     ],
   };
 });
@@ -213,7 +242,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     if (name === 'crawler_scrape') {
       const url = args?.url as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Crawler\\scripts\\scrape.py "${url}"`;
+      const scriptPath = path.join(projectsDir, 'via54Crawler', 'scripts', 'scrape.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" "${url}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -222,7 +252,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'medit_ask') {
       const query = args?.query as string;
-      const cmd = `C:\\Users\\via54\\Desktop\\developments\\via54Medit\\medit.exe ask "${query}" --json`;
+      const binPath = path.join(projectsDir, 'via54Medit', 'medit.exe');
+      const cmd = `"${binPath}" ask "${query}" --json`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -231,7 +262,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'design_layout') {
       const theme = args?.theme as string;
-      const cmd = `C:\\Users\\via54\\Desktop\\developments\\via54Design\\via54.exe prompt --scene "${theme}"`;
+      const binPath = path.join(projectsDir, 'via54Design', 'via54.exe');
+      const cmd = `"${binPath}" prompt --scene "${theme}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -240,7 +272,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     // --- algo 插件能力组 ---
     if (name === 'algo_llm_list') {
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54algo\\algorithm\\cli\\__main__.py llm list`;
+      const scriptPath = path.join(projectsDir, 'via54algo', 'algorithm', 'cli', '__main__.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" llm list`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -250,7 +283,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (name === 'algo_llm_use') {
       const provider = args?.provider as string;
       const model = args?.model as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54algo\\algorithm\\cli\\__main__.py llm use "${provider}" "${model}"`;
+      const scriptPath = path.join(projectsDir, 'via54algo', 'algorithm', 'cli', '__main__.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" llm use "${provider}" "${model}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -259,7 +293,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'algo_llm_test') {
       const provider = args?.provider as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54algo\\algorithm\\cli\\__main__.py llm test "${provider}"`;
+      const scriptPath = path.join(projectsDir, 'via54algo', 'algorithm', 'cli', '__main__.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" llm test "${provider}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -270,8 +305,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (name === 'larkgroups_sync') {
       const includeAttachments = !!args?.includeAttachments;
       const attachFlag = includeAttachments ? ' --include-attachments' : '';
+      const scriptPath = path.join(projectsDir, 'via54Larkgroups', 'src', 'via54_larkgroups', '__main__.py');
       // 使用 -y 参数实现静默，防交互拦截
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Larkgroups\\src\\via54_larkgroups\\__main__.py sync${attachFlag} -y`;
+      const cmd = `"${pythonPath}" "${scriptPath}" sync${attachFlag} -y`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -281,7 +317,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (name === 'larkgroups_archive') {
       const date = args?.date as string;
       const dateFlag = date ? ` --date "${date}"` : '';
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Larkgroups\\src\\via54_larkgroups\\__main__.py archive${dateFlag}`;
+      const scriptPath = path.join(projectsDir, 'via54Larkgroups', 'src', 'via54_larkgroups', '__main__.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" archive${dateFlag}`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -290,7 +327,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'larkgroups_search') {
       const keyword = args?.keyword as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Larkgroups\\src\\via54_larkgroups\\__main__.py search --keyword "${keyword}"`;
+      const scriptPath = path.join(projectsDir, 'via54Larkgroups', 'src', 'via54_larkgroups', '__main__.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" search --keyword "${keyword}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -301,7 +339,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const source = args?.source as string;
       const template = args?.template as string;
       const output = args?.output as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Report\\src\\main.py fill --source "${source}" --template "${template}" --output "${output}"`;
+      const scriptPath = path.join(projectsDir, 'via54Report', 'src', 'main.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" fill --source "${source}" --template "${template}" --output "${output}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -310,7 +349,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'report_verify') {
       const file = args?.file as string;
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Report\\src\\main.py verify --file "${file}"`;
+      const scriptPath = path.join(projectsDir, 'via54Report', 'src', 'main.py');
+      const cmd = `"${pythonPath}" "${scriptPath}" verify --file "${file}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -318,7 +358,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     if (name === 'crawler_pull_policies') {
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Crawler\\scripts\\pull_pricing_policies.py`;
+      const scriptPath = path.join(projectsDir, 'via54Crawler', 'scripts', 'pull_pricing_policies.py');
+      const cmd = `"${pythonPath}" "${scriptPath}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -326,7 +367,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     if (name === 'crawler_pull_guidelines') {
-      const cmd = `"${pythonPath}" C:\\Users\\via54\\Desktop\\developments\\via54Crawler\\scripts\\pull_medical_guidelines.py`;
+      const scriptPath = path.join(projectsDir, 'via54Crawler', 'scripts', 'pull_medical_guidelines.py');
+      const cmd = `"${pythonPath}" "${scriptPath}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -335,7 +377,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'medit_medplan_market_analysis') {
       const project = args?.project as string;
-      const cmd = `C:\\Users\\via54\\Desktop\\developments\\via54Medit\\medit.exe medplan market-analysis "${project}"`;
+      const binPath = path.join(projectsDir, 'via54Medit', 'medit.exe');
+      const cmd = `"${binPath}" medplan market-analysis "${project}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -344,7 +387,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     if (name === 'medit_medplan_strategy_analysis') {
       const project = args?.project as string;
-      const cmd = `C:\\Users\\via54\\Desktop\\developments\\via54Medit\\medit.exe medplan strategy-analysis "${project}"`;
+      const binPath = path.join(projectsDir, 'via54Medit', 'medit.exe');
+      const cmd = `"${binPath}" medplan strategy-analysis "${project}"`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],
@@ -355,7 +399,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const project = args?.project as string;
       const casesDb = args?.casesDb as string;
       const dbFlag = casesDb ? ` --cases-db "${casesDb}"` : '';
-      const cmd = `C:\\Users\\via54\\Desktop\\developments\\via54Medit\\medit.exe medplan marketing-analysis "${project}"${dbFlag}`;
+      const binPath = path.join(projectsDir, 'via54Medit', 'medit.exe');
+      const cmd = `"${binPath}" medplan marketing-analysis "${project}"${dbFlag}`;
+      const { stdout } = await execAsync(cmd);
+      return {
+        content: [{ type: 'text', text: stdout }],
+      };
+    }
+
+    if (name === 'parse_wechat_article') {
+      const url = args?.url as string;
+      const path = require('path');
+      const cliPath = path.join(__dirname, '..', '..', 'via54lab_wechat', 'dist', 'cli', 'index.js');
+      const cmd = `node "${cliPath}" "${url}" --json`;
       const { stdout } = await execAsync(cmd);
       return {
         content: [{ type: 'text', text: stdout }],

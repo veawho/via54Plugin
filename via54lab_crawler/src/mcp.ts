@@ -12,13 +12,18 @@ const execAsync = promisify(exec);
 const pythonPath = process.env.PYTHON || 'python';
 const currentDir = __dirname;
 
-// 自动就地寻找脚本
 const getScriptPath = () => {
   const pkgSrcScript = path.join(currentDir, '..', 'src', 'scrape.py');
   if (fs.existsSync(pkgSrcScript)) {
     return `"${pkgSrcScript}"`;
   }
-  // 降级使用原来的外部绝对路径
+  // 动态解析外部绝对路径（支持 G:\agent\ai\projects 和 C:\Users\via54\Desktop\developments）
+  const projectsDir = process.env.VIA54_PROJECTS_DIR || path.resolve(currentDir, '..', '..', '..');
+  const fallbackPath = path.join(projectsDir, 'via54Crawler', 'scripts', 'scrape.py');
+  if (fs.existsSync(fallbackPath)) {
+    return `"${fallbackPath}"`;
+  }
+  // 降级使用硬编码的备用路径
   return '"C:\\Users\\via54\\Desktop\\developments\\via54Crawler\\scripts\\scrape.py"';
 };
 const scrapeScript = getScriptPath();

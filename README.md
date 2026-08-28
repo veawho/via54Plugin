@@ -74,6 +74,20 @@ git checkout
 cd via54lab_medit && npm install
 ```
 
+### 3. Windows 环境下独立包隔离安装与编译
+若在 Windows 设备上运行 `npm install` 遇到 `EISDIR` 软链接创建失败错误（通常是因为 Windows 未启用开发者模式或无管理员权限），可以直接进入特定的子插件目录进行隔离安装与编译。本项目已实现完全的物理隔离解耦，支持完全的独立部署与运行：
+```bash
+# 进入核心包或特定子插件目录
+cd via54lab_core
+npm install
+npm run build
+```
+
+### 4. 环境变量与动态路径解析
+所有子插件的依赖可执行文件或外部 Python 脚本均支持**动态路径解析**，系统会自动寻找您当前工作区下的同级目录（例如 `G:\agent\ai\projects` 或原有的 `C:\Users\via54\Desktop\developments` 目录）。
+如果您在其他路径部署，可以通过设置以下环境变量进行自定义指定：
+- **`VIA54_PROJECTS_DIR`**：自定义指定相关项目仓库（如 `via54Crawler`, `via54Medit` 等）存放的父目录。
+
 ---
 
 ## 🔍 依赖自检与无人值守修复机制

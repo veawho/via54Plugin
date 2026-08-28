@@ -12,14 +12,19 @@ const execAsync = promisify(exec);
 const pythonPath = process.env.PYTHON || 'python';
 const currentDir = __dirname;
 
-// 自动就地寻找脚本
 const getScriptPath = () => {
   const pkgScriptPath = path.join(currentDir, 'main.js'); // 编译后的编译目录同级
   const pkgSrcScript = path.join(currentDir, '..', 'src', 'main.py');
   if (fs.existsSync(pkgSrcScript)) {
     return `"${pkgSrcScript}"`;
   }
-  // 降级使用原来的外部绝对路径
+  // 动态解析外部绝对路径（支持 G:\agent\ai\projects 和 C:\Users\via54\Desktop\developments）
+  const projectsDir = process.env.VIA54_PROJECTS_DIR || path.resolve(currentDir, '..', '..', '..');
+  const fallbackPath = path.join(projectsDir, 'via54Report', 'src', 'main.py');
+  if (fs.existsSync(fallbackPath)) {
+    return `"${fallbackPath}"`;
+  }
+  // 降级使用硬编码的备用路径
   return '"C:\\Users\\via54\\Desktop\\developments\\via54Report\\src\\main.py"';
 };
 const reportScript = getScriptPath();

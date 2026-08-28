@@ -44,6 +44,12 @@ const pluginRegistry: Record<string, DependencyMeta> = {
     pythonModules: ['pandas', 'openpyxl', 'click'],
     npmGlobals: [],
   },
+  wechat: {
+    name: 'wechat',
+    systemBinaries: [],
+    pythonModules: [],
+    npmGlobals: [],
+  },
 };
 
 function askQuestion(query: string): Promise<string> {

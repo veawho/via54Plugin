@@ -1,0 +1,25 @@
+{
+  "name": "@via54/plugin-wechat",
+  "version": "1.0.0",
+  "description": "via54Plugin 微信公众号文章解析独立子插件",
+  "main": "dist/dsh/plugin.js",
+  "bin": {
+    "wechat-parser": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start:mcp": "node dist/mcp/server.js",
+    "start:cli": "node dist/cli/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "cordis": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "type": "module"
+}
