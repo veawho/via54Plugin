@@ -35,8 +35,8 @@ npm run build
 在根目录下，您可以通过 core 管理端单独针对本插件运行自检和一键环境修复：
 ```bash
 # 依赖环境检测
-npm run plugin:check -- medit
+node via54lab_core/dist/cli.js check medit
 
 # 自动静默修复缺失的依赖包 (Python / NPM)
-npm run plugin:deploy -- medit -y
+node via54lab_core/dist/cli.js deploy medit -y
 ```

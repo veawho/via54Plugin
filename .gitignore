@@ -5,6 +5,10 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# Python caches and compiled artifacts next to source
+__pycache__/
+*.pyc
+
 # Debug logs
 npm-debug.log*
 yarn-debug.log*

@@ -29,8 +29,8 @@ npm run build
 在根目录下，您可以通过 core 管理端单独针对本插件运行自检和一键环境修复：
 ```bash
 # 依赖环境检测
-npm run plugin:check -- crawler
+node via54lab_core/dist/cli.js check crawler
 
 # 自动静默修复缺失的 Python 库等依赖
-npm run plugin:deploy -- crawler -y
+node via54lab_core/dist/cli.js deploy crawler -y
 ```
